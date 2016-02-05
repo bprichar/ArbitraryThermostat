@@ -1,3 +1,6 @@
 [submodule "Arduino-Makefile"]
 	path = Arduino-Makefile
 	url = https://github.com/WeAreLeka/Arduino-Makefile
+[submodule "lib/DHT"]
+	path = lib/DHT
+	url = git@github.com:adafruit/DHT-sensor-library.git
