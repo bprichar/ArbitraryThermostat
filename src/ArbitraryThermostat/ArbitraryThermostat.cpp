@@ -51,6 +51,7 @@ void setup() {
   dht.begin();
   tft.begin(HX8357D);
   tft.fillScreen(HX8357_BLACK);
+  tft.setRotation(1);
 }
 
 void loop() {
@@ -74,10 +75,12 @@ void loop() {
     tft.println("Failed to read from DHT sensor!");
   }
   else {
-    tft.println("Humidity: ");
-    tft.println(h);
-    tft.println("Temperature: ");
-    tft.println(f);
+    tft.print("Humidity: ");
+    tft.print(h);
+    tft.println("%");
+    tft.print("Temp: ");
+    tft.print(f);
+    tft.println("* F");
   }
 
   tft.setCursor(0, 200);
@@ -86,8 +89,11 @@ void loop() {
   }
   else {
     DateTime now = rtc.now();
-    tft.println(now.hour());
-    tft.println(now.minute());
+    tft.print("Time: ");
+    tft.print(now.hour());
+    tft.print(":");
+    tft.print(now.minute());
+    tft.print(":");
     tft.println(now.second());
    } 
 }
