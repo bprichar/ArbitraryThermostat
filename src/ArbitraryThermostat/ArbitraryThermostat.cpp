@@ -45,55 +45,65 @@ Adafruit_HX8357 tft = Adafruit_HX8357(TFT_CS, TFT_DC, TFT_RST);
 // For the one we're using, its 300 ohms across the X plate
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
-void setup() {
-  Wire.begin();
-  rtc.begin();
-  dht.begin();
-  tft.begin(HX8357D);
-  tft.fillScreen(HX8357_BLACK);
-  tft.setRotation(1);
+void displayHome()
+{
+    tft.fillScreen(HX8357_BLACK);
+    tft.setCursor(0, 10);
+    tft.setTextColor(HX8357_WHITE);
+    tft.setTextSize(3);
+    // Reading temperature or humidity takes about 250 milliseconds!
+    // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+    float h = dht.readHumidity();
+    // Read temperature as Celsius (the default)
+    float t = dht.readTemperature();
+    // Read temperature as Fahrenheit (isFahrenheit = true)
+    float f = dht.readTemperature(true);
+
+    // Check if any reads failed and exit early (to try again).
+    if (isnan(h) || isnan(t) || isnan(f))
+    {
+        tft.println("Failed to read from DHT sensor!");
+    }
+    else
+    {
+        tft.print("Humidity: ");
+        tft.print(h);
+        tft.println("%");
+        tft.print("Temp: ");
+        tft.print(f);
+        tft.println("* F");
+    }
+
+    tft.setCursor(0, 200);
+    if (! rtc.isrunning())
+    {
+        tft.println("RTC is NOT running!");
+    }
+    else
+    {
+        DateTime now = rtc.now();
+        tft.print("Time: ");
+        tft.print(now.hour());
+        tft.print(":");
+        tft.print(now.minute());
+        tft.print(":");
+        tft.println(now.second());
+    } 
 }
 
-void loop() {
-  // Wait a few seconds between measurements.
-  delay(2000);
+void setup()
+{
+    Wire.begin();
+    rtc.begin();
+    dht.begin();
+    tft.begin(HX8357D);
+    tft.fillScreen(HX8357_BLACK);
+    tft.setRotation(1);
+}
 
-  tft.fillScreen(HX8357_BLACK);
-  tft.setCursor(0, 10);
-  tft.setTextColor(HX8357_WHITE);
-  tft.setTextSize(3);
-  // Reading temperature or humidity takes about 250 milliseconds!
-  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-  float h = dht.readHumidity();
-  // Read temperature as Celsius (the default)
-  float t = dht.readTemperature();
-  // Read temperature as Fahrenheit (isFahrenheit = true)
-  float f = dht.readTemperature(true);
-
-  // Check if any reads failed and exit early (to try again).
-  if (isnan(h) || isnan(t) || isnan(f)) {
-    tft.println("Failed to read from DHT sensor!");
-  }
-  else {
-    tft.print("Humidity: ");
-    tft.print(h);
-    tft.println("%");
-    tft.print("Temp: ");
-    tft.print(f);
-    tft.println("* F");
-  }
-
-  tft.setCursor(0, 200);
-  if (! rtc.isrunning()) {
-    tft.println("RTC is NOT running!");
-  }
-  else {
-    DateTime now = rtc.now();
-    tft.print("Time: ");
-    tft.print(now.hour());
-    tft.print(":");
-    tft.print(now.minute());
-    tft.print(":");
-    tft.println(now.second());
-   } 
+void loop()
+{
+    // Wait a few seconds between measurements.
+    delay(2000);
+    displayHome();
 }
